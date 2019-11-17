@@ -10,13 +10,15 @@ app.get('/', (req,res) => res.sendFile(__dirname + '/dist/index.html'))
 io.on('connection', (socket) => {
     socket.username = 'anonymous';
     socket.on('message', (message) => {
-        io.emit('message', {
-            'user': socket.username,
-            'message': message,
-        })
+        if (message != '') {
+            io.emit('message', {
+                'user': socket.username,
+                'message': message,
+            })
+        }
     });
     socket.on('join', (username) => {
-        if (username != null) {
+        if (username != '') {
             socket.username = username;
         }
         socket.broadcast.emit('message', {
